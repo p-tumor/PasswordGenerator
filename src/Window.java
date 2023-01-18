@@ -12,11 +12,13 @@ public class Window extends JFrame implements ActionListener{
     private JButton copyToClip;
     private JComboBox lengthOfPass;
     private Integer passLength;
+    private JLabel password;
     public Window() {
+        passLength = 16;
         JLabel label = new JLabel();
         label.setText("Garvin's Password Generator!");
 
-        JLabel password = new JLabel();
+        password = new JLabel();
         password.setText("Generated password will appear here.");
         password.setFont(new Font("Comfortaa",Font.PLAIN,25));
         JPanel passwordPanel = new JPanel();
@@ -31,6 +33,7 @@ public class Window extends JFrame implements ActionListener{
         generatebutton.addActionListener(e -> {
             try {
                 password.setText(PassGen.generatePassword(passLength));
+                System.out.println(password.getText().length());
             } catch (FileNotFoundException ex) {
                 throw new RuntimeException(ex);
             }
@@ -54,7 +57,9 @@ public class Window extends JFrame implements ActionListener{
         //combobox
         Integer[] ints = {16,17,18,19,20};
         lengthOfPass = new JComboBox(ints);
-        lengthOfPass.addActionListener(this);
+        lengthOfPass.addActionListener(e -> {
+            passLength = (Integer) lengthOfPass.getSelectedItem();
+        });
         JPanel comboPanel = new JPanel();
         comboPanel.add(lengthOfPass,BorderLayout.SOUTH);
 
@@ -73,12 +78,8 @@ public class Window extends JFrame implements ActionListener{
         this.setVisible(true);
 
     }
-
-
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == lengthOfPass){
-            passLength = (Integer) lengthOfPass.getSelectedItem();
-        }
+
     }
 }

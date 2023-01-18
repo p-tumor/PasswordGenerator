@@ -23,7 +23,7 @@ public class PassGen{
         }
         for(int i = 0; i < chars.length; i++){
             double ran = Math.random();
-            if (ran > 0.4){
+            if (ran > 0.6){
                 chars[i] = chars[i].toUpperCase();
             }
         }
@@ -92,12 +92,15 @@ public class PassGen{
             else if (randomNum < .50 && randomNum >= .25) password.append(wordfrags3.get(randomIndex));
             else if(randomNum < .25) password.append(wordfrags4.get(randomIndex));
         }
+        password = new StringBuilder(toUppercaseRan(password.toString().toString()));
+        password = new StringBuilder(addInt(password.toString().toString()));
+        password = new StringBuilder(addSpecial(password.toString().toString()));
         boolean notValid = true;
         while(notValid) {
             if (password.length() > passLength) {
-                int start = password.length() - passLength;
+                int diff = password.length() - passLength - 1;
+                int start = password.length()-diff-1;
                 password.delete(start, password.length());
-                System.out.println("Password = "+password+"\npassword length = "+password.length());
                 if(password.length() == passLength) notValid = false;
             } else if (password.length() < passLength) {
                 double randomNum = Math.random();
@@ -108,9 +111,6 @@ public class PassGen{
                 else if(randomNum < .25) password.append(wordfrags4.get(randomIndex));
             }
         }
-        password = new StringBuilder(toUppercaseRan(password.toString().toString()));
-        password = new StringBuilder(addInt(password.toString().toString()));
-        password = new StringBuilder(addSpecial(password.toString().toString()));
         return password.toString();
     }
 }
