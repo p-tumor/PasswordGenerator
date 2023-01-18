@@ -1,10 +1,9 @@
-import javax.swing.*;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
-import java.io.File;
-import java.util.Scanner;
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
-        Window window = new Window();
+        //Window window = new Window();
+        String pass = PassGen.generatePassword(16);
+        System.out.println("final" + pass);
+        System.out.println("final Length of pass = "+pass.length());
     }
 }

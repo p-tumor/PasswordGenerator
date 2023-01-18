@@ -3,38 +3,60 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
+import java.awt.datatransfer.StringSelection;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
 
 public class Window extends JFrame implements ActionListener{
-    JButton button;
-    public Window() throws FileNotFoundException {
+    private JButton generatebutton;
+    private JButton copyToClip;
+    private JComboBox lengthOfPass;
+    private Integer passLength;
+    public Window() {
         JLabel label = new JLabel();
         label.setText("Garvin's Password Generator!");
 
         JLabel password = new JLabel();
-        password.setText(PassGen.generatePassword());
+        password.setText("Generated password will appear here.");
         password.setFont(new Font("Comfortaa",Font.PLAIN,25));
         JPanel passwordPanel = new JPanel();
         passwordPanel.add(password);
-
-
         JPanel generatePanel = new JPanel();
-        generatePanel.setBackground(new Color(0,0,0));
         generatePanel.setSize(100,200);
 
 
 
-        button = new JButton();
-        button.setSize(250,100);
-        button.addActionListener(e -> {
+        generatebutton = new JButton();
+        generatebutton.setSize(250,100);
+        generatebutton.addActionListener(e -> {
             try {
-                password.setText(PassGen.generatePassword());
+                password.setText(PassGen.generatePassword(passLength));
             } catch (FileNotFoundException ex) {
                 throw new RuntimeException(ex);
             }
         });
-        button.setFocusable(false);
-        button.setText("Generate");
-        generatePanel.add(button);
+        generatebutton.setFocusable(false);
+        generatebutton.setText("Generate");
+        generatePanel.add(generatebutton);
+
+        copyToClip = new JButton();
+        copyToClip.setText("Copy Password");
+        copyToClip.setFocusable(false);
+        copyToClip.setSize(100,100);
+        copyToClip.addActionListener(e -> {
+            String myString = password.getText();
+            StringSelection stringSelection = new StringSelection(myString);
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(stringSelection, null);
+        });
+        generatePanel.add(copyToClip);
+
+        //combobox
+        Integer[] ints = {16,17,18,19,20};
+        lengthOfPass = new JComboBox(ints);
+        lengthOfPass.addActionListener(this);
+        JPanel comboPanel = new JPanel();
+        comboPanel.add(lengthOfPass,BorderLayout.SOUTH);
 
 
         this.setTitle("Password Generator");
@@ -43,9 +65,11 @@ public class Window extends JFrame implements ActionListener{
         this.setSize(750, 600);
 
 
-        this.add(generatePanel,BorderLayout.CENTER);
+
+        this.add(generatePanel,BorderLayout.SOUTH);
         this.add(label,BorderLayout.NORTH);
-        this.add(passwordPanel,BorderLayout.SOUTH);
+        this.add(passwordPanel,BorderLayout.CENTER);
+        this.add(comboPanel,BorderLayout.WEST);
         this.setVisible(true);
 
     }
@@ -53,6 +77,8 @@ public class Window extends JFrame implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        if(e.getSource() == lengthOfPass){
+            passLength = (Integer) lengthOfPass.getSelectedItem();
+        }
     }
 }

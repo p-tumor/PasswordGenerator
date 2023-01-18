@@ -2,19 +2,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
-
-import mypacks.SecurePassword;
-public class PassGen extends SecurePassword{
-    private static final String[] WORDS = {"unbelievable","howitzers", "bollocks","senior", "metric", "result", "experience", "minimum", "distributed"};
-
-    public PassGen(String password) {
-        super(password);
-    }
-
-    public static String ranStr(){
-        int i = (int)(Math.random()* WORDS.length);
-        return WORDS[i];
-    }
+public class PassGen{
     private static ArrayList<String> breakWords(String word){
         ArrayList<String> fragments = new ArrayList<>();
         int length = word.length();
@@ -84,8 +72,8 @@ public class PassGen extends SecurePassword{
         }
         return words;
     }
-    public static String generatePassword() throws FileNotFoundException{
-        String password = "";
+    public static String generatePassword(int passLength) throws FileNotFoundException{
+        StringBuilder password = new StringBuilder();
         ArrayList<String> wordList = getWordList();
         String[] words = new String[4];
         for(int count = 0; count < 4; count++){
@@ -99,14 +87,30 @@ public class PassGen extends SecurePassword{
         for(int count = 0; count < 6;count++){
             double randomNum = Math.random();
             int randomIndex = (int)(Math.random()*5);
-            if (randomNum >= .75)password += (wordfrags.get(randomIndex));
-            else if (randomNum < .75 && randomNum >= .50)password += (wordfrags2.get(randomIndex));
-            else if (randomNum < .50 && randomNum >= .25)password += (wordfrags3.get(randomIndex));
-            else if(randomNum < .25) password += (wordfrags4.get(randomIndex));
+            if (randomNum >= .75) password.append(wordfrags.get(randomIndex));
+            else if (randomNum < .75 && randomNum >= .50) password.append(wordfrags2.get(randomIndex));
+            else if (randomNum < .50 && randomNum >= .25) password.append(wordfrags3.get(randomIndex));
+            else if(randomNum < .25) password.append(wordfrags4.get(randomIndex));
         }
-        password = toUppercaseRan(password.toString());
-        password = addInt(password.toString());
-        password = addSpecial(password.toString());
-        return password;
+        boolean notValid = true;
+        while(notValid) {
+            if (password.length() > passLength) {
+                int start = password.length() - passLength;
+                password.delete(start, password.length());
+                System.out.println("Password = "+password+"\npassword length = "+password.length());
+                if(password.length() == passLength) notValid = false;
+            } else if (password.length() < passLength) {
+                double randomNum = Math.random();
+                int randomIndex = (int)(Math.random()*5);
+                if (randomNum >= .75) password.append(wordfrags.get(randomIndex));
+                else if (randomNum < .75 && randomNum >= .50) password.append(wordfrags2.get(randomIndex));
+                else if (randomNum < .50 && randomNum >= .25) password.append(wordfrags3.get(randomIndex));
+                else if(randomNum < .25) password.append(wordfrags4.get(randomIndex));
+            }
+        }
+        password = new StringBuilder(toUppercaseRan(password.toString().toString()));
+        password = new StringBuilder(addInt(password.toString().toString()));
+        password = new StringBuilder(addSpecial(password.toString().toString()));
+        return password.toString();
     }
 }
