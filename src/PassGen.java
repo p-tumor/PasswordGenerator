@@ -33,7 +33,7 @@ public class PassGen{
         string = result.toString();
         return string;
     }
-    private static String addInt(String string){
+    public static String addInt(String string){
         StringBuilder stb = new StringBuilder(string);
         for(int i = 0; i < (int)(Math.random()*13)+1;i++) {
             int spot = (int) (Math.random() * stb.length());
@@ -48,7 +48,7 @@ public class PassGen{
         string = stb.toString();
         return string;
     }
-    public static String addSpecial(String string){
+    private static String addSpecial(String string){
         StringBuilder stb = new StringBuilder(string);
         String[] specialChars = {"!","@","#","$","%","&","*","?",":",";","[","]","_","(",")"};
         for(int i = 0; i < (int)(Math.random()*13)+1;i++) {

@@ -31,12 +31,8 @@ public class Window extends JFrame implements ActionListener{
         generatebutton = new JButton();
         generatebutton.setSize(250,100);
         generatebutton.addActionListener(e -> {
-            try {
-                password.setText(PassGen.generatePassword(passLength));
-                System.out.println(password.getText().length());
-            } catch (FileNotFoundException ex) {
-                throw new RuntimeException(ex);
-            }
+            password.setText(PasswordGen2.genPass(passLength));
+            System.out.println(password.getText().length());
         });
         generatebutton.setFocusable(false);
         generatebutton.setText("Generate");
@@ -55,7 +51,7 @@ public class Window extends JFrame implements ActionListener{
         generatePanel.add(copyToClip);
 
         //combobox
-        Integer[] ints = {16,17,18,19,20};
+        Integer[] ints = {16,17,18,19,20,2000};
         lengthOfPass = new JComboBox(ints);
         lengthOfPass.addActionListener(e -> {
             passLength = (Integer) lengthOfPass.getSelectedItem();
