@@ -50,7 +50,7 @@ public class PassGen{
     }
     private static String addSpecial(String string){
         StringBuilder stb = new StringBuilder(string);
-        String[] specialChars = {"!","@","#","$","%","&","*","?",":",";","[","]","_","(",")"};
+        String[] specialChars = {"!","@","#","$","%","&","*","?",":",";","[","]","_","(",")","<",">",":",";"};
         for(int i = 0; i < (int)(Math.random()*13)+1;i++) {
             int spot = (int) (Math.random() * stb.length());
             String ranChoice = specialChars[(int)(Math.random() * specialChars.length)];

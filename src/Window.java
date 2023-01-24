@@ -10,13 +10,13 @@ import java.awt.datatransfer.Clipboard;
 public class Window extends JFrame implements ActionListener{
     private JButton generatebutton;
     private JButton copyToClip;
-    private JComboBox lengthOfPass;
-    private Integer passLength;
     private JLabel password;
+    private JTextField passLength;
+    private JCheckBox hasSpecials, hasInts, hasUpper;
+    private JPanel checks;
+    private int lengthOfPass;
     public Window() {
-        passLength = 16;
-        JLabel label = new JLabel();
-        label.setText("Garvin's Password Generator!");
+        String[] dontCopy = {"Generated password will appear here.","Generate a password first","Choose the length of your password!","Invalid"};
 
         password = new JLabel();
         password.setText("Generated password will appear here.");
@@ -31,8 +31,8 @@ public class Window extends JFrame implements ActionListener{
         generatebutton = new JButton();
         generatebutton.setSize(250,100);
         generatebutton.addActionListener(e -> {
-            password.setText(PasswordGen2.genPass(passLength));
-            System.out.println(password.getText().length());
+            if(lengthOfPass == 0)password.setText("Choose the length of your password!");
+            else password.setText(PassGen2.generator(lengthOfPass));
         });
         generatebutton.setFocusable(false);
         generatebutton.setText("Generate");
@@ -43,21 +43,51 @@ public class Window extends JFrame implements ActionListener{
         copyToClip.setFocusable(false);
         copyToClip.setSize(100,100);
         copyToClip.addActionListener(e -> {
-            String myString = password.getText();
-            StringSelection stringSelection = new StringSelection(myString);
-            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            clipboard.setContents(stringSelection, null);
+            boolean notVal = false;
+            for(String s : dontCopy){
+                if(s.equals(password.getText())) notVal = true;
+            }
+            if (!notVal) {
+                String myString = password.getText();
+                StringSelection stringSelection = new StringSelection(myString);
+                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                clipboard.setContents(stringSelection, null);
+            }
         });
         generatePanel.add(copyToClip);
 
-        //combobox
-        Integer[] ints = {16,17,18,19,20,2000};
-        lengthOfPass = new JComboBox(ints);
-        lengthOfPass.addActionListener(e -> {
-            passLength = (Integer) lengthOfPass.getSelectedItem();
+        passLength = new JTextField("Insert Length of Password");
+        passLength.setPreferredSize(new Dimension(150,25));
+        passLength.addActionListener(e -> {
+            try{
+                lengthOfPass = Integer.parseInt(passLength.getText());
+            }catch(Exception s){
+                password.setText("Invalid");
+            }
         });
-        JPanel comboPanel = new JPanel();
-        comboPanel.add(lengthOfPass,BorderLayout.SOUTH);
+        generatePanel.add(passLength);
+
+        checks = new JPanel();
+        checks.setLayout(new BoxLayout(checks,BoxLayout.Y_AXIS));
+
+        hasSpecials = new JCheckBox("Special Characters?");
+        hasSpecials.setFocusable(false);
+        hasSpecials.setAlignmentX(Component.CENTER_ALIGNMENT);
+        hasSpecials.addActionListener(e -> PassGen2.setHasSpecials(hasSpecials.isSelected()));
+
+        hasInts = new JCheckBox("Has Integers?");
+        hasInts.setFocusable(false);
+        hasInts.setAlignmentX(Component.CENTER_ALIGNMENT);
+        hasInts.addActionListener(e -> PassGen2.setHasInts(hasInts.isSelected()));
+
+        hasUpper = new JCheckBox("Has Uppercase letters?");
+        hasUpper.setFocusable(false);
+        hasUpper.setAlignmentX(Component.CENTER_ALIGNMENT);
+        hasUpper.addActionListener(e -> PassGen2.setToUppercase(hasUpper.isSelected()));
+
+        checks.add(hasInts);
+        checks.add(hasSpecials);
+        checks.add(hasUpper);
 
 
         this.setTitle("Password Generator");
@@ -65,12 +95,9 @@ public class Window extends JFrame implements ActionListener{
         this.setResizable(false);
         this.setSize(750, 600);
 
-
-
+        this.add(checks, BorderLayout.CENTER);
         this.add(generatePanel,BorderLayout.SOUTH);
-        this.add(label,BorderLayout.NORTH);
-        this.add(passwordPanel,BorderLayout.CENTER);
-        this.add(comboPanel,BorderLayout.WEST);
+        this.add(passwordPanel,BorderLayout.NORTH);
         this.setVisible(true);
 
     }
