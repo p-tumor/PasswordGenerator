@@ -8,12 +8,7 @@ public class PasswordWindow extends JFrame{
         passwords.setLayout(new BoxLayout(passwords, BoxLayout.Y_AXIS));
         Scanner reader = new Scanner(new File("Passwords"));
         while(reader.hasNextLine()){
-            String line = reader.nextLine();
-            JPanel p = new JPanel();
-            p.add(new JLabel(line));
-            JButton b = new JButton()
-            p.add()
-            passwords.add(p);
+
         }
         reader.close();
         JScrollPane scrollPane = new JScrollPane(passwords);
