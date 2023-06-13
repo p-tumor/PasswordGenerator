@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class PassGen2 {
+public class PasswordGen {
     private static boolean toUppercase, hasSpecials, hasInts;
     public static String generator(int passLen){
         StringBuilder pass = new StringBuilder(passLen);
@@ -25,14 +25,14 @@ public class PassGen2 {
     }
 
     public static void setToUppercase(boolean toUppercase) {
-        PassGen2.toUppercase = toUppercase;
+        PasswordGen.toUppercase = toUppercase;
     }
 
     public static void setHasSpecials(boolean hasSpecials) {
-        PassGen2.hasSpecials = hasSpecials;
+        PasswordGen.hasSpecials = hasSpecials;
     }
 
     public static void setHasInts(boolean hasInts) {
-        PassGen2.hasInts = hasInts;
+        PasswordGen.hasInts = hasInts;
     }
 }

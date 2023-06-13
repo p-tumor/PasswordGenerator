@@ -1,41 +1,57 @@
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.io.FileNotFoundException;
 import java.awt.datatransfer.StringSelection;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 
 public class Window extends JFrame implements ActionListener{
-    private JButton generatebutton;
-    private JButton copyToClip;
-    private JLabel password;
-    private JTextField passLength;
+    private JButton generatebutton, copyToClip, savePass;
+    private JLabel password, sliderVal;
     private JCheckBox hasSpecials, hasInts, hasUpper;
     private JPanel checks;
     private int lengthOfPass;
+    private JSlider passLength;
     public Window() {
         String[] dontCopy = {"Generated password will appear here.","Generate a password first","Choose the length of your password!","Invalid"};
 
         password = new JLabel();
         password.setText("Generated password will appear here.");
-        password.setFont(new Font("Comfortaa",Font.PLAIN,25));
+        password.setFont(new Font("Plain", Font.PLAIN, 12));
         JPanel passwordPanel = new JPanel();
+        passwordPanel.setOpaque(true);
         passwordPanel.add(password);
         JPanel generatePanel = new JPanel();
         generatePanel.setSize(100,200);
+        generatePanel.setOpaque(true);
 
 
+        lengthOfPass = 8;
+        passLength = new JSlider(JSlider.HORIZONTAL, 8, 60, 8);
+        sliderVal = new JLabel(Integer.toString(passLength.getValue()));
+        passLength.addChangeListener(e -> {
+            sliderVal.setText(Integer.toString(passLength.getValue()));
+            lengthOfPass = passLength.getValue();
+        });
+        passLength.setPreferredSize(new Dimension(400,200));
+        passLength.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+        passLength.setOpaque(false);
 
         generatebutton = new JButton();
         generatebutton.setSize(250,100);
-        generatebutton.addActionListener(e -> {
-            if(lengthOfPass == 0)password.setText("Choose the length of your password!");
-            else password.setText(PassGen2.generator(lengthOfPass));
-        });
+        generatebutton.addActionListener(e -> password.setText(PasswordGen.generator(lengthOfPass)));
         generatebutton.setFocusable(false);
         generatebutton.setText("Generate");
+        generatebutton.setFocusable(false);
+        generatebutton.setOpaque(false);
+        generatebutton.setContentAreaFilled(false);
+        generatebutton.setBorderPainted(false);
         generatePanel.add(generatebutton);
 
         copyToClip = new JButton();
@@ -52,49 +68,73 @@ public class Window extends JFrame implements ActionListener{
                 StringSelection stringSelection = new StringSelection(myString);
                 Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
                 clipboard.setContents(stringSelection, null);
+                FileHandler.addText(password.getText());
+                System.out.println(copyToClip.getFont());
             }
         });
+        copyToClip.setFocusable(false);
+        copyToClip.setOpaque(false);
+        copyToClip.setContentAreaFilled(false);
+        copyToClip.setBorderPainted(false);
         generatePanel.add(copyToClip);
 
-        passLength = new JTextField("Insert Length of Password");
-        passLength.setPreferredSize(new Dimension(150,25));
-        passLength.addActionListener(e -> {
-            try{
-                lengthOfPass = Integer.parseInt(passLength.getText());
-            }catch(Exception s){
-                password.setText("Invalid");
+        savePass = new JButton("Save Password");
+        savePass.addActionListener(e->{
+            boolean notVal = false;
+            for(String s: dontCopy){
+                if(s.equals(password.getText())) notVal = true;
+            }
+            if(!notVal) {
+                String saveName = JOptionPane.showInputDialog(savePass, "Give your password a name to remember!");
+                FileHandler.addText(saveName + " : " + password.getText());
             }
         });
-        generatePanel.add(passLength);
+        savePass.setFocusable(false);
+        savePass.setOpaque(false);
+        savePass.setContentAreaFilled(false);
+        savePass.setBorderPainted(false);
+        generatePanel.add(savePass);
 
         checks = new JPanel();
         checks.setLayout(new BoxLayout(checks,BoxLayout.Y_AXIS));
 
         hasSpecials = new JCheckBox("Special Characters?");
-        hasSpecials.setFocusable(false);
+        hasSpecials.setFocusable(true);
         hasSpecials.setAlignmentX(Component.CENTER_ALIGNMENT);
-        hasSpecials.addActionListener(e -> PassGen2.setHasSpecials(hasSpecials.isSelected()));
+        hasSpecials.addActionListener(e -> PasswordGen.setHasSpecials(hasSpecials.isSelected()));
+
+        hasSpecials.setOpaque(false);
 
         hasInts = new JCheckBox("Has Integers?");
         hasInts.setFocusable(false);
         hasInts.setAlignmentX(Component.CENTER_ALIGNMENT);
-        hasInts.addActionListener(e -> PassGen2.setHasInts(hasInts.isSelected()));
+        hasInts.addActionListener(e -> PasswordGen.setHasInts(hasInts.isSelected()));
+        hasInts.setOpaque(false);
 
         hasUpper = new JCheckBox("Has Uppercase letters?");
         hasUpper.setFocusable(false);
         hasUpper.setAlignmentX(Component.CENTER_ALIGNMENT);
-        hasUpper.addActionListener(e -> PassGen2.setToUppercase(hasUpper.isSelected()));
+        hasUpper.addActionListener(e -> PasswordGen.setToUppercase(hasUpper.isSelected()));
+        hasUpper.setOpaque(false);
+
+
+
+
+
 
         checks.add(hasInts);
         checks.add(hasSpecials);
         checks.add(hasUpper);
+        checks.add(passLength);
+        checks.add(sliderVal);
+
 
 
         this.setTitle("Password Generator");
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setResizable(false);
-        this.setSize(750, 600);
-
+        this.setSize(450, 300);
+        this.setLocationRelativeTo(null);
         this.add(checks, BorderLayout.CENTER);
         this.add(generatePanel,BorderLayout.SOUTH);
         this.add(passwordPanel,BorderLayout.NORTH);

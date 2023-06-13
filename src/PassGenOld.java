@@ -2,7 +2,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
-public class PassGen{
+public class PassGenOld{
     private static ArrayList<String> breakWords(String word){
         ArrayList<String> fragments = new ArrayList<>();
         int length = word.length();
