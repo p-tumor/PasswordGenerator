@@ -1,13 +1,23 @@
 import javax.swing.*;
+import java.io.*;
+import java.util.Scanner;
 
 public class PasswordWindow extends JFrame{
-    public PasswordWindow(){
+    public PasswordWindow() throws FileNotFoundException {
         JPanel passwords = new JPanel();
         passwords.setLayout(new BoxLayout(passwords, BoxLayout.Y_AXIS));
-        for (int i = 0; i < 40; i++){
-            passwords.add(new JLabel("THIS IS A TEST"));
+        Scanner reader = new Scanner(new File("Passwords"));
+        while(reader.hasNextLine()){
+            String line = reader.nextLine();
+            JPanel p = new JPanel();
+            p.add(new JLabel(line));
+            JButton b = new JButton()
+            p.add()
+            passwords.add(p);
         }
+        reader.close();
         JScrollPane scrollPane = new JScrollPane(passwords);
+
 
         this.add(scrollPane);
         this.setContentPane(scrollPane);

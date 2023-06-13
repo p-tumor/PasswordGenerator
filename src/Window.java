@@ -12,7 +12,7 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 
 public class Window extends JFrame implements ActionListener{
-    private JButton generatebutton, copyToClip, savePass;
+    private JButton generatebutton, copyToClip, savePass, passList;
     private JLabel password, sliderVal;
     private JCheckBox hasSpecials, hasInts, hasUpper;
     private JPanel checks;
@@ -93,7 +93,18 @@ public class Window extends JFrame implements ActionListener{
         savePass.setOpaque(false);
         savePass.setContentAreaFilled(false);
         savePass.setBorderPainted(false);
+
         generatePanel.add(savePass);
+
+        passList = new JButton("Passwords");
+        passList.addActionListener(e ->{
+            try {
+                new PasswordWindow();
+            } catch (FileNotFoundException ex) {
+                ex.printStackTrace();
+            }
+        });
+        generatePanel.add(passList);
 
         checks = new JPanel();
         checks.setLayout(new BoxLayout(checks,BoxLayout.Y_AXIS));
@@ -117,18 +128,11 @@ public class Window extends JFrame implements ActionListener{
         hasUpper.addActionListener(e -> PasswordGen.setToUppercase(hasUpper.isSelected()));
         hasUpper.setOpaque(false);
 
-
-
-
-
-
         checks.add(hasInts);
         checks.add(hasSpecials);
         checks.add(hasUpper);
         checks.add(passLength);
         checks.add(sliderVal);
-
-
 
         this.setTitle("Password Generator");
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

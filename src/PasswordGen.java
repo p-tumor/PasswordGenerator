@@ -1,16 +1,13 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-
 public class PasswordGen {
     private static boolean toUppercase, hasSpecials, hasInts;
     public static String generator(int passLen){
         StringBuilder pass = new StringBuilder(passLen);
-        ArrayList<String> alphabet = new ArrayList<>(Arrays.asList("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"));
+        String[] alphabet = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
         String[] specialChars = {"!","@","#","$","%","&","*","?",":",";","[","]","_","(",")","<",">",":",";"};
-        for(int i = (int)(Math.random()*alphabet.size()); pass.length() < passLen; i = (int)(Math.random()*alphabet.size())){
+        for(int i = (int)(Math.random()*alphabet.length); pass.length() < passLen; i = (int)(Math.random()*alphabet.length)){
             double ran = Math.random();
             if(toUppercase && ran < 0.3){
-                pass.append(alphabet.get(i).toUpperCase());
+                pass.append(alphabet[i].toUpperCase());
             }else if (hasSpecials && ran >= 0.3 && ran < 0.5){
                 int ranIn = (int)(Math.random()*specialChars.length);
                 pass.append(specialChars[ranIn]);
@@ -18,7 +15,7 @@ public class PasswordGen {
                 int ranNum = (int)(Math.random()*10);
                 pass.append(ranNum);
             }else{
-                pass.append(alphabet.get(i));
+                pass.append(alphabet[i]);
             }
         }
         return pass.toString();
